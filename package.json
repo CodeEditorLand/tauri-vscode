@@ -6,6 +6,14 @@
 		"workspaceContains:**/tauri.*.conf.json5",
 		"onFileSystem:tauri"
 	],
+	"author": {
+		"email": "Land@PlayForm.Cloud",
+		"name": "🌆 — Land —",
+		"url": "HTTPS://Land.PlayForm.Cloud"
+	},
+	"bugs": {
+		"url": "HTTPS://GitHub.Com/CodeEditorLand/TauriLand/issues"
+	},
 	"contributes": {
 		"commands": [
 			{
@@ -55,13 +63,32 @@
 	},
 	"description": "Enhances the experience of Tauri apps development",
 	"devDependencies": {
+		"@playform/build": "0.0.7",
+		"@playform/document": "0.0.6",
 		"@types/node": "18.19.31"
 	},
 	"displayName": "Tauri",
+	"homepage": "HTTPS://GitHub.Com/CodeEditorLand/TauriLand#readme",
 	"icon": "assets/icon.png",
+	"keywords": [
+		"land"
+	],
+	"license": "SEE LICENSE IN LICENSE",
 	"main": "./out/extension.js",
 	"name": "tauri-vscode",
+	"private": false,
+	"publishConfig": {
+		"access": "public"
+	},
+	"repository": {
+		"type": "git",
+		"url": "git+HTTPS://github.com/CodeEditorLand/TauriLand.git"
+	},
 	"scripts": {
-		"compile": "tsc -p ./"
-	}
+		"Document": "Document 'Source/**/*.ts'",
+		"compile": "tsc -p ./",
+		"prepublishOnly": "Build 'Source/**/*.ts'"
+	},
+	"type": "module",
+	"version": "0.0.1"
 }
