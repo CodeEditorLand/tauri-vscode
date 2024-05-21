@@ -55,13 +55,13 @@
 		"onFileSystem:tauri"
 	],
 	"dependencies": {
-		"axios": "1.6.8",
-		"glob": "10.3.12",
+		"axios": "1.7.1",
+		"glob": "10.3.15",
 		"run-in-terminal": "0.0.3",
-		"strip-ansi": "6.0.1"
+		"strip-ansi": "7.1.0"
 	},
 	"devDependencies": {
-		"@types/node": "18.19.31"
+		"@types/node": "20.12.12"
 	},
 	"icon": "assets/icon.png"
 }
