@@ -5,7 +5,6 @@
 .DS_Store
 npm-debug.log
 Thumbs.db
-node_modules/
 out/
 .vs/
 .vscode-test/
