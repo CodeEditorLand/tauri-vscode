@@ -1,11 +1,11 @@
 {
-	"name": "tauri-vscode",
-	"displayName": "Tauri",
-	"description": "Enhances the experience of Tauri apps development",
-	"main": "./out/extension.js",
-	"scripts": {
-		"compile": "tsc -p ./"
-	},
+	"activationEvents": [
+		"workspaceContains:**/tauri.conf.json",
+		"workspaceContains:**/tauri.*.conf.json",
+		"workspaceContains:**/tauri.conf.json5",
+		"workspaceContains:**/tauri.*.conf.json5",
+		"onFileSystem:tauri"
+	],
 	"contributes": {
 		"commands": [
 			{
@@ -47,21 +47,21 @@
 			}
 		]
 	},
-	"activationEvents": [
-		"workspaceContains:**/tauri.conf.json",
-		"workspaceContains:**/tauri.*.conf.json",
-		"workspaceContains:**/tauri.conf.json5",
-		"workspaceContains:**/tauri.*.conf.json5",
-		"onFileSystem:tauri"
-	],
 	"dependencies": {
 		"axios": "1.7.2",
 		"glob": "11.0.0",
 		"run-in-terminal": "0.0.3",
 		"strip-ansi": "7.1.0"
 	},
+	"description": "Enhances the experience of Tauri apps development",
 	"devDependencies": {
 		"@types/node": "20.14.11"
 	},
-	"icon": "assets/icon.png"
+	"displayName": "Tauri",
+	"icon": "assets/icon.png",
+	"main": "./out/extension.js",
+	"name": "tauri-vscode",
+	"scripts": {
+		"compile": "tsc -p ./"
+	}
 }
