@@ -55,7 +55,7 @@
 	},
 	"description": "Enhances the experience of Tauri apps development",
 	"devDependencies": {
-		"@types/node": "22.5.0"
+		"@types/node": "22.5.1"
 	},
 	"displayName": "Tauri",
 	"icon": "assets/icon.png",
