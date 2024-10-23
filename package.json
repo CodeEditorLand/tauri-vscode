@@ -49,7 +49,7 @@
 	},
 	"description": "Enhances the experience of Tauri apps development",
 	"devDependencies": {
-		"@types/node": "22.7.8",
+		"@types/node": "22.7.9",
 		"axios": "1.7.7",
 		"glob": "11.0.0",
 		"run-in-terminal": "0.0.3",
