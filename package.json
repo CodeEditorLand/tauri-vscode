@@ -49,12 +49,12 @@
 	},
 	"description": "Enhances the experience of Tauri apps development",
 	"devDependencies": {
-		"@types/node": "22.7.9",
+		"@types/node": "22.8.1",
 		"axios": "1.7.7",
 		"glob": "11.0.0",
 		"run-in-terminal": "0.0.3",
 		"strip-ansi": "7.1.0",
-		"tsup": "8.3.0"
+		"tsup": "8.3.5"
 	},
 	"displayName": "Tauri",
 	"icon": "assets/icon.png",
