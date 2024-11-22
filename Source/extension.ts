@@ -17,7 +17,9 @@ interface Process {
 }
 
 let outputChannel: vscode.OutputChannel;
+
 let terminal: vscode.Terminal | null = null;
+
 const runningProcesses: Map<number, Process> = new Map();
 
 // this method is called when your extension is activated
@@ -85,6 +87,7 @@ function registerSchemasHandler(context: vscode.ExtensionContext) {
 						const res = await axios.get(
 							`https://github.com/tauri-apps/tauri/releases/download/tauri-build-v${version}/${filename}`,
 						);
+
 						return res.status == 200
 							? JSON.stringify(res.data)
 							: null;
@@ -94,19 +97,23 @@ function registerSchemasHandler(context: vscode.ExtensionContext) {
 					const cargoLockPath = (
 						await vscode.workspace.findFiles("**/Cargo.lock")
 					)[0];
+
 					if (cargoLockPath) {
 						const cargoLock = fs.readFileSync(
 							cargoLockPath.fsPath,
 							"utf-8",
 						);
+
 						const matches =
 							/\[\[package\]\]\nname = "tauri-build"\nversion = "(.*)"/g.exec(
 								cargoLock,
 							);
+
 						if (matches && matches[1]) {
 							const schema = await getSchemaFromRelease(
 								matches[1],
 							);
+
 							if (schema) return schema;
 						}
 					}
@@ -115,6 +122,7 @@ function registerSchemasHandler(context: vscode.ExtensionContext) {
 					const cargoTomlPath = (
 						await vscode.workspace.findFiles("**/Cargo.toml")
 					)[0];
+
 					if (cargoTomlPath) {
 						const cargoToml = fs.readFileSync(
 							cargoTomlPath.fsPath,
@@ -139,10 +147,12 @@ function registerSchemasHandler(context: vscode.ExtensionContext) {
 							/\[.*tauri-build\][\s\S.]*version = "(.*)"\n/g,
 						]) {
 							const matches = regex.exec(cargoToml);
+
 							if (matches && matches[1]) {
 								const schema = await getSchemaFromRelease(
 									matches[1],
 								);
+
 								if (schema) return schema;
 							}
 						}
@@ -152,20 +162,24 @@ function registerSchemasHandler(context: vscode.ExtensionContext) {
 					let res = await axios.get(
 						`https://api.github.com/repos/tauri-apps/tauri/releases`,
 					);
+
 					let tag_name = (
 						res.data as Array<{ tag_name: string }>
 					).find((e) =>
 						e.tag_name.startsWith("tauri-build-v"),
 					)?.tag_name;
+
 					if (tag_name) {
 						const matches =
 							/((\d|x|\*)+\.(\d|x|\*)+\.(\d|x|\*)+(-[a-zA-Z-0-9]*(.[0-9]+))*)/g.exec(
 								tag_name,
 							);
+
 						if (matches && matches[1]) {
 							const schema = await getSchemaFromRelease(
 								matches[1],
 							);
+
 							if (schema) return schema;
 						}
 					}
@@ -181,7 +195,9 @@ function runTauriInit(): void {
 	__pickProjectAndRunTauriScript(
 		(projectPath) => {
 			let installCommand: string;
+
 			let onInstall = () => {};
+
 			if (__isVueCliApp(projectPath)) {
 				installCommand = "vue add tauri";
 			} else if (__isNodeProject(projectPath)) {
@@ -194,6 +210,7 @@ function runTauriInit(): void {
 					const packageJson = JSON.parse(
 						fs.readFileSync(`${projectPath}/package.json`, "utf8"),
 					);
+
 					if (!packageJson.scripts) {
 						packageJson.scripts = {};
 					}
@@ -221,6 +238,7 @@ function runTauriInit(): void {
 		},
 		() => {
 			const paths = __getNpmProjectsPaths();
+
 			return paths.filter((p) => {
 				return fs.existsSync(path.join(p, "src-tauri"));
 			});
@@ -248,6 +266,7 @@ function runTauriBuildDebug(): void {
 
 function __isVueCliApp(cwd: string): boolean {
 	const packageJson = __getPackageJson(cwd);
+
 	return "@vue/cli-service" in (packageJson?.devDependencies ?? {});
 }
 
@@ -266,8 +285,10 @@ interface PackageJson {
 
 function __getPackageJson(appDir: string): PackageJson | null {
 	const packageJsonPath = path.join(appDir, "package.json");
+
 	if (fs.existsSync(packageJsonPath)) {
 		const packageJsonStr = fs.readFileSync(packageJsonPath).toString();
+
 		return JSON.parse(packageJsonStr) as PackageJson;
 	} else {
 		return null;
@@ -276,11 +297,13 @@ function __getPackageJson(appDir: string): PackageJson | null {
 
 function __getNpmProjectsPaths(): string[] {
 	const folders = vscode.workspace.workspaceFolders;
+
 	if (!folders) {
 		return [];
 	}
 
 	const paths = [];
+
 	for (const folder of folders) {
 		const npmProjectRoots: string[] = glob
 			.sync(folder.uri.fsPath.split("\\").join("/") + "/**/package.json")
@@ -299,11 +322,13 @@ function __getNpmProjectsPaths(): string[] {
 
 function __getTauriProjectsPaths(): string[] {
 	const folders = vscode.workspace.workspaceFolders;
+
 	if (!folders) {
 		return [];
 	}
 
 	const paths = [];
+
 	for (const folder of folders) {
 		const tauriProjectRoots: string[] = glob
 			.sync(folder.uri.fsPath.split("\\").join("/") + "/**/src-tauri")
@@ -352,12 +377,14 @@ function __runCommandInIntegratedTerminal(
 	}
 
 	terminal.show();
+
 	if (cwd) {
 		// Replace single backslash with double backslash.
 		const textCwd = cwd.replace(/\\/g, "\\\\");
 		terminal.sendText(["cd", `"${textCwd}"`].join(" "));
 	}
 	terminal.sendText(command + " " + args.join(" "));
+
 	return Promise.resolve();
 }
 
@@ -368,6 +395,7 @@ function __runCommandInOutputWindow(
 ): Promise<void> {
 	return new Promise((resolve, reject) => {
 		const cmd = command + " " + args.join(" ");
+
 		const p = exec(cmd, { cwd, env: process.env });
 
 		if (p.pid === undefined) {
@@ -425,6 +453,7 @@ function __useNpm(projectPath: string) {
 function __useCargo() {
 	try {
 		execSync("cargo tauri --version", { windowsHide: true });
+
 		return true;
 	} catch {
 		return false;
@@ -482,6 +511,7 @@ function __runScript(command: string, args: string[], options: RunOptions) {
 			}
 		} else {
 			outputChannel.clear();
+
 			return __runCommandInOutputWindow(command, args, options.cwd);
 		}
 	});
@@ -489,6 +519,7 @@ function __runScript(command: string, args: string[], options: RunOptions) {
 
 function __runTauriScript(args: string[], options: RunOptions): void {
 	const command = __getPackageManagerCommand(options.cwd);
+
 	if (!command) return;
 
 	if (__isVueCliApp(options.cwd)) {
@@ -508,14 +539,17 @@ function __pickProjectAndRunTauriScript(
 	getProjectPathsFn = __getTauriProjectsPaths,
 ): void {
 	const tauriProjectsPaths = getProjectPathsFn();
+
 	const projectList: TauriProject[] = [];
 
 	for (const p of tauriProjectsPaths) {
 		let label = path.basename(p);
+
 		if (__isMultiRoot()) {
 			const root = vscode.workspace.getWorkspaceFolder(
 				vscode.Uri.file(p),
 			);
+
 			if (root && root.name !== label) {
 				label = `${root.name}: ${label}`;
 			}
@@ -529,6 +563,7 @@ function __pickProjectAndRunTauriScript(
 
 	if (projectList.length === 0) {
 		vscode.window.showErrorMessage("Tauri project not found");
+
 		return;
 	}
 
