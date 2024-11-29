@@ -13,6 +13,7 @@ import * as vscode from "vscode";
 
 interface Process {
 	process: ChildProcess;
+
 	cmd: string;
 }
 
@@ -26,9 +27,11 @@ const runningProcesses: Map<number, Process> = new Map();
 // your extension is activated the very first time the command is executed
 export function activate(context: vscode.ExtensionContext) {
 	registerCommands(context);
+
 	registerSchemasHandler(context);
 
 	outputChannel = vscode.window.createOutputChannel("tauri");
+
 	context.subscriptions.push(outputChannel);
 
 	vscode.window.onDidCloseTerminal((closedTerminal) => {
@@ -62,6 +65,7 @@ function registerSchemasHandler(context: vscode.ExtensionContext) {
 		"tauri",
 		new (class implements vscode.TextDocumentContentProvider {
 			onDidChangeEmitter = new vscode.EventEmitter<vscode.Uri>();
+
 			onDidChange = this.onDidChangeEmitter.event;
 
 			async provideTextDocumentContent(uri: vscode.Uri): Promise<string> {
@@ -206,6 +210,7 @@ function runTauriInit(): void {
 					: __useYarn(projectPath)
 						? "yarn add @tauri-apps/cli --dev"
 						: `${__getNpmBin()} install @tauri-apps/cli --save-dev`;
+
 				onInstall = () => {
 					const packageJson = JSON.parse(
 						fs.readFileSync(`${projectPath}/package.json`, "utf8"),
@@ -214,13 +219,16 @@ function runTauriInit(): void {
 					if (!packageJson.scripts) {
 						packageJson.scripts = {};
 					}
+
 					if (!packageJson.scripts["tauri"]) {
 						packageJson.scripts["tauri"] = "tauri";
+
 						fs.writeFileSync(
 							`${projectPath}/package.json`,
 							JSON.stringify(packageJson, null, 4),
 						);
 					}
+
 					__runTauriScript(["init"], {
 						cwd: projectPath,
 						noOutputWindow: true,
@@ -231,6 +239,7 @@ function runTauriInit(): void {
 			}
 
 			const [command, ...args] = installCommand.split(" ");
+
 			__runScript(command, args, {
 				cwd: projectPath,
 				noOutputWindow: command === "vue",
@@ -278,6 +287,7 @@ interface PackageJson {
 	dependencies: {
 		[name: string]: any;
 	};
+
 	devDependencies: {
 		[name: string]: any;
 	};
@@ -308,6 +318,7 @@ function __getNpmProjectsPaths(): string[] {
 		const npmProjectRoots: string[] = glob
 			.sync(folder.uri.fsPath.split("\\").join("/") + "/**/package.json")
 			.map((p: string) => path.dirname(p));
+
 		paths.push(
 			...npmProjectRoots.filter((p) => !p.includes("node_modules")),
 		);
@@ -333,10 +344,12 @@ function __getTauriProjectsPaths(): string[] {
 		const tauriProjectRoots: string[] = glob
 			.sync(folder.uri.fsPath.split("\\").join("/") + "/**/src-tauri")
 			.map((p: string) => path.dirname(p));
+
 		paths.push(
 			...tauriProjectRoots.filter((p) => !p.includes("node_modules")),
 		);
 	}
+
 	return paths;
 }
 
@@ -344,6 +357,7 @@ function __isMultiRoot(): boolean {
 	if (vscode.workspace.workspaceFolders) {
 		return vscode.workspace.workspaceFolders.length > 1;
 	}
+
 	return false;
 }
 
@@ -381,8 +395,10 @@ function __runCommandInIntegratedTerminal(
 	if (cwd) {
 		// Replace single backslash with double backslash.
 		const textCwd = cwd.replace(/\\/g, "\\\\");
+
 		terminal.sendText(["cd", `"${textCwd}"`].join(" "));
 	}
+
 	terminal.sendText(command + " " + args.join(" "));
 
 	return Promise.resolve();
@@ -407,20 +423,27 @@ function __runCommandInOutputWindow(
 		p.stderr?.on("data", (data: string) => {
 			outputChannel.append(stripAnsi(data));
 		});
+
 		p.stdout?.on("data", (data: string) => {
 			outputChannel.append(stripAnsi(data));
 		});
+
 		p.on("exit", (_code: number, signal: string) => {
 			runningProcesses.delete(p.pid!);
 
 			if (signal === "SIGTERM") {
 				outputChannel.appendLine("Successfully killed process");
+
 				outputChannel.appendLine("-----------------------");
+
 				outputChannel.appendLine("");
+
 				reject();
 			} else {
 				outputChannel.appendLine("-----------------------");
+
 				outputChannel.appendLine("");
+
 				resolve();
 			}
 		});
@@ -431,6 +454,7 @@ function __runCommandInOutputWindow(
 
 interface TauriProject {
 	label: string;
+
 	projectPath: string;
 }
 
@@ -490,6 +514,7 @@ function __getPackageManagerCommand(projectPath: string): string | null {
 
 interface RunOptions {
 	noOutputWindow?: boolean;
+
 	cwd: string;
 }
 
@@ -524,6 +549,7 @@ function __runTauriScript(args: string[], options: RunOptions): void {
 
 	if (__isVueCliApp(options.cwd)) {
 		const [cmd, ...cmgArgs] = args;
+
 		__runScript(
 			command,
 			[`tauri:${cmd === "dev" ? "serve" : cmd}`, ...cmgArgs],
