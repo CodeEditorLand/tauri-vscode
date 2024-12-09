@@ -47,6 +47,7 @@
 			}
 		]
 	},
+	"dependencies": {},
 	"description": "Enhances the experience of Tauri apps development",
 	"devDependencies": {
 		"@types/node": "22.10.1",
