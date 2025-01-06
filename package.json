@@ -56,7 +56,7 @@
 	],
 	"dependencies": {},
 	"devDependencies": {
-		"@types/node": "22.10.1",
+		"@types/node": "22.10.5",
 		"axios": "1.7.9",
 		"glob": "11.0.0",
 		"run-in-terminal": "0.0.3",
