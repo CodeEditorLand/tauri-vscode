@@ -4,7 +4,7 @@ Visual Studio Code Extension that adds support to Tauri commands and `tauri.conf
 
 ## Supported commands
 
-It adds the `init`, `deps`, `dev` and `build` commands to the `Command Palette`.
+It adds the `init`, `dev`, `build` and `build-debug` commands to the `Command Palette`.
 
 ## JSON validation
 
