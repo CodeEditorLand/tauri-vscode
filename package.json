@@ -61,7 +61,7 @@
 		"glob": "11.0.1",
 		"run-in-terminal": "0.0.3",
 		"strip-ansi": "7.1.0",
-		"tsup": "8.3.5"
+		"tsup": "8.3.6"
 	},
 	"icon": "assets/icon.png"
 }
