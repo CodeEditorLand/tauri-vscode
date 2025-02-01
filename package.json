@@ -56,12 +56,12 @@
 	],
 	"dependencies": {},
 	"devDependencies": {
-		"@types/node": "18.19.48",
-		"axios": "1.7.7",
-		"glob": "11.0.0",
+		"@types/node": "22.13.0",
+		"axios": "1.7.9",
+		"glob": "11.0.1",
 		"run-in-terminal": "0.0.3",
 		"strip-ansi": "7.1.0",
-		"tsup": "^8.2.4"
+		"tsup": "^8.3.6"
 	},
 	"icon": "assets/icon.png"
 }
